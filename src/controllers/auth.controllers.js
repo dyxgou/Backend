@@ -1,6 +1,5 @@
 import UserModel from "@models/UserModel.js";
 import { hashPassword, comparePassword } from "@utils/password.js";
-import * as jwt from "jsonwebtoken";
 
 export const register = async (req, res) => {
   const { body: userInfo } = req;
@@ -44,7 +43,10 @@ export const login = async (req, res) => {
       friends: true,
       post: true,
     }
-  );
+  ).populate("post", {
+    description: true,
+    image: true,
+  });
 
   const isCorrectPassword = await comparePassword(password, user?.password);
 
@@ -52,14 +54,7 @@ export const login = async (req, res) => {
     return res.status(401).send("Invalid email or password");
   }
 
-  const SEVEN_DAYS = 60 * 60 * 24 * 7;
-
-  const token = jwt.sign({ userId: user?._id }, process.env.JWT_SECRET, {
-    expiresIn: SEVEN_DAYS,
-  });
-
   return res.status(200).send({
-    token,
     user: {
       _id: user?._id,
       avatar: user?.avatar,

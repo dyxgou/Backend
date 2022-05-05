@@ -1,15 +1,8 @@
 import UserModel from "@models/UserModel";
 import { uploadImage, deleteImage } from "@libs/cloudinary";
 import * as fs from "fs-extra";
-import decodeToken from "@utils/decodeToken";
 
 export const updateAvatar = async (req, res) => {
-  const { userId } = await decodeToken(req, res);
-
-  if (!userId) {
-    return res.status(401).send("userId not found");
-  }
-
   if (!req.files?.image) {
     return res.status(404).send("Image not found");
   }

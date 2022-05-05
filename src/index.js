@@ -1,6 +1,7 @@
-import db from "./libs/db";
+import db from "@libs/db";
 import http from "http";
 import { app } from "./app";
+
 // Connect to mongodb
 db();
 

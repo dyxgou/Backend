@@ -1,7 +1,7 @@
-import PostModel from "../models/PostModel.js";
-import { uploadImage, deleteImage } from "../libs/cloudinary.js";
+import PostModel from "@models/PostModel.js";
+import { uploadImage, deleteImage } from "@libs/cloudinary.js";
+import UserModel from "@models/UserModel.js";
 import fs from "fs-extra";
-import UserModel from "../models/UserModel.js";
 
 export const createPost = async (req, res) => {
   try {
@@ -113,27 +113,19 @@ export const getPostById = async (req, res) => {
   }
 };
 
-export const myPosts = async (req, res) => {
-  const { id } = req.params;
+export const getPostsFriends = async (req, res) => {
+  const { id: userId } = req.params;
 
-  try {
-    const user = await UserModel.findById(id).populate("post", {
-      description: true,
-      image: true,
+  const a = await UserModel.findById(userId)
+    .populate("friends", {
+      post: 1,
+    })
+    .populate("post", {
+      description: 1,
+      image: 1,
     });
 
-    if (!user) {
-      return res.sendStatus(404).json({
-        error: "⚠️ user not found",
-      });
-    }
-
-    return res.send(user);
-  } catch (err) {
-    console.log(err);
-    return res.sendStatus(401).json({
-      error: "⚠️ Something went wrong when you try to get your posts",
-      message: err.message,
-    });
-  }
+  return res.json({
+    user: a.post,
+  });
 };

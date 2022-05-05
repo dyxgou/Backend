@@ -5,8 +5,8 @@ import {
   getPosts,
   getPostById,
   updatePost,
-  myPosts,
-} from "../controllers/posts.controllers";
+  getPostsFriends,
+} from "@controllers/posts.controllers";
 
 const router = Router();
 
@@ -20,6 +20,6 @@ router.get("/posts", getPosts);
 
 router.get("/post/:id", getPostById);
 
-router.get("/myposts/:id", myPosts);
+router.get("/postsFriends/:id", getPostsFriends);
 
 export default router;
